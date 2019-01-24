@@ -44,7 +44,7 @@ describe "Merchant API" do
       merchant_json = JSON.parse(response.body)
 
       expect(response).to be_successful
-      expect(merchant_json["data"]["attributes"]["items"]).to eq(merchant.items)
+      expect(merchant_json["data"]["relationships"]["items"]["data"]).to eq(merchant.items)
   end
 
   it "can find_all merchant by name " do
