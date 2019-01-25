@@ -12,8 +12,14 @@ class Merchant < ApplicationRecord
      .limit(num)
   end
 
-  def all_expens_invoices
-    Invoice.expensive_invoices
+  def self.by_items(num)
+    select("merchants.*, sum(invoice_items.quantity) AS quantity")
+      .joins(invoices: :invoice_items)
+      .joins(invoices: :transactions)
+      .where("transactions.result = ?", "success")
+      .group("merchants.id")
+      .order("quantity DESC")
+      .limit(num)
   end
 
   def all_items
