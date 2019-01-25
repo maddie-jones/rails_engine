@@ -122,20 +122,24 @@ describe "Merchant API" do
     invoice_1 = create(:invoice, merchant: merchant_1, customer: customer)
     invoice_item_1 = create(:invoice_item, item: item_1, invoice: invoice_1, quantity: 1 , unit_price: 300 )
     invoice_item_2 = create(:invoice_item, item: item_2, invoice: invoice_1, quantity: 2, unit_price: 245 )
+    transaction_1 = create(:transaction, invoice: invoice_1, result: "success")
 
     merchant_2 = create(:merchant)
     customer = create(:customer)
     invoice_2 = create(:invoice, merchant: merchant_2, customer: customer)
     item_3 = create(:item, merchant: merchant_2)
     invoice_item_1 = create(:invoice_item, item: item_3, invoice: invoice_2, quantity: 10 , unit_price: 1000)
+    transaction_2 = create(:transaction, invoice: invoice_2, result: "success")
 
     merchant_3 = create(:merchant)
     customer = create(:customer)
+    transaction_3 =
     item_4 = create(:item, merchant: merchant_3)
     item_5 = create(:item, merchant: merchant_3)
     invoice_3 = create(:invoice, merchant: merchant_3, customer: customer)
     invoice_item_1 = create(:invoice_item, item: item_4, invoice: invoice_3, quantity: 4 , unit_price: 600)
     invoice_item_2 = create(:invoice_item, item: item_5, invoice: invoice_3, quantity: 3 , unit_price: 150 )
+    transaction_3 = create(:transaction, invoice: invoice_3, result: "success")
 
     get "/api/v1/merchants/most_revenue?quantity=#{x}"
 
