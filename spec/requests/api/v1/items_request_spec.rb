@@ -39,4 +39,21 @@ describe 'items API' do
     expect(invoices["data"][1]["attributes"]["quantity"]).to eq(invoice_item_2.quantity)
   end
 
+  it "can find all merchants" do
+    merchant = create(:merchant)
+    customer = create(:customer)
+    item = create(:item, merchant: merchant)
+    invoice = create(:invoice, merchant: merchant, customer: customer)
+    invoice_item_1 = create(:invoice_item, item: item, invoice: invoice, quantity: 3)
+    invoice_item_2 = create(:invoice_item, item: item, invoice: invoice, quantity: 2)
+
+    get "/api/v1/items/#{item.id}/merchant"
+
+    merchant_json = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(merchant_json["data"][0]["id"]).to eq(merchant.id.to_s)
+    expect(merchant_json["data"][0]["attributes"]["name"]).to eq(merchant.name)
+  end
+
 end
