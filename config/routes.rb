@@ -7,10 +7,12 @@ Rails.application.routes.draw do
         get "find_all", to: "search#index"
         get "/:id/items", to: "itemsmerchant#index"
         get "/:id/invoices", to: "invoicesmerchant#index"
+        get "/:id/revenue", to: "merchantrevenue#show"
         get "/:id/revenue", to: "merchantrevenue#index"
         get "/most_revenue", to: "revenue#show"
         get "/revenue", to: "revenue#index"
         get "/most_items", to: "most_items#show"
+        get "/:id/favorite_customer", to: "favorite_customer#show"
       end
       namespace :items do
         get "/:id/invoice_items", to: "invoice_items#index"
