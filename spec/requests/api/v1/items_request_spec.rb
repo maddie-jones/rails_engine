@@ -56,4 +56,28 @@ describe 'items API' do
     expect(merchant_json["data"][0]["attributes"]["name"]).to eq(merchant.name)
   end
 
+  it 'top items by revenue' do
+    x = 3
+    merchant = create(:merchant)
+    customer = create(:customer)
+    item_1 = create(:item, merchant: merchant)
+    item_2 = create(:item, merchant: merchant)
+    item_3 = create(:item, merchant: merchant)
+    invoice = create(:invoice, merchant: merchant, customer: customer)
+    invoice_item_1 = create(:invoice_item, item: item_1, invoice: invoice, quantity: 3, unit_price: 200)
+    invoice_item_2 = create(:invoice_item, item: item_2, invoice: invoice, quantity: 2, unit_price: 500)
+    invoice_item_2 = create(:invoice_item, item: item_3, invoice: invoice, quantity: 5, unit_price: 150)
+    invoice_item_2 = create(:invoice_item, item: item_3, invoice: invoice, quantity: 2, unit_price: 300)
+
+    get "/api/v1/items/most_revenue?quantity=#{x}"
+
+    items = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(items["data"][0]["id"]).to eq(item_3.id.to_s)
+    expect(items["data"][0]["attributes"]["name"]).to eq(item_3.name)
+    expect(items["data"][1]["id"]).to eq(item_2.id.to_s)
+    expect(items["data"][1]["attributes"]["name"]).to eq(item_2.name)
+  end
+
 end

@@ -17,6 +17,7 @@ Rails.application.routes.draw do
       namespace :items do
         get "/:id/invoice_items", to: "invoice_items#index"
         get "/:id/merchant", to: "merchant#show"
+        get "/most_revenue", to: "most_revenue#index"
       end
       namespace :invoices do
         get "/:id/invoice_items", to: "invoice_items#index"
