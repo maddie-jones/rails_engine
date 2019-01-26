@@ -22,6 +22,13 @@ class Merchant < ApplicationRecord
       .limit(num)
   end
 
+  def self.revenue_by_date(date)
+      joins(invoices: :invoice_items)
+      .joins(invoices: :transactions)
+      .where("transactions.result = ?", "success")
+      .where("invoices.created_at =?", date)
+  end
+
   def all_items
     items
   end

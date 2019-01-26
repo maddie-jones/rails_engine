@@ -5,4 +5,9 @@ class Api::V1::Merchants::RevenueController < ApplicationController
     render json: MerchantSerializer.new(merchants)
   end
 
+  def index
+    revenue = Merchant.revenue_by_date(params[:quantity])
+    render json: MerchantSerializer.new(revenue)
+  end
+
 end
