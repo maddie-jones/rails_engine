@@ -51,6 +51,27 @@ describe "Customers API" do
     expect(invoices["data"][1]["attributes"]["status"]).to eq(customer.invoices.last.status)
   end
 
+  it "can find all customer transactions" do
+    merchant = create(:merchant)
+    customer = create(:customer)
+    invoice_1 = create(:invoice, merchant: merchant, customer: customer)
+    invoice_2 = create(:invoice, merchant: merchant, customer: customer)
+    invoice_3 = create(:invoice, merchant: merchant, customer: customer)
+    transaction_1 = create(:transaction, invoice: invoice_1, result: "success")
+    transaction_2 = create(:transaction, invoice: invoice_2, result: "success")
+    transaction_3 = create(:transaction, invoice: invoice_3, result: "success")
+
+    get "/api/v1/customers/#{customer.id}/transactions"
+
+    transactions = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(transactions["data"][0]["id"]).to eq(customer.all_transactions(customer).first.id.to_s)
+    expect(transactions["data"][0]["attributes"]["result"]).to eq(customer.all_transactions(customer).first.result)
+    expect(transactions["data"][2]["id"]).to eq(customer.all_transactions(customer).last.id.to_s)
+    expect(transactions["data"][2]["attributes"]["result"]).to eq(customer.all_transactions(customer).last.result)
+  end
+
   it "can find_all customer by name " do
     customer = create(:customer)
     customer_1 = create(:customer)
