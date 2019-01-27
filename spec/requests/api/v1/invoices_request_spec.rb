@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 describe 'invoices API' do
+
   it "sends a list of invoice" do
     merchant = create(:merchant)
     customer = create(:customer)
@@ -14,29 +15,34 @@ describe 'invoices API' do
     invoice = JSON.parse(response.body)
 
   end
-  
-  xit "can get one merchant by its id" do
-    id = create(:merchant).id
 
-    get "/api/v1/merchants/#{id}"
+  it "can get one invoice by its id" do
+    merchant = create(:merchant)
+    customer = create(:customer)
+    invoice_1 = create(:invoice, merchant: merchant, customer: customer)
+    id = invoice_1.id
 
-    merchant = JSON.parse(response.body)
+    get "/api/v1/invoices/#{id}"
+
+    invoice = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(merchant["data"]["id"]).to eq(id.to_s)
+    expect(invoice["data"]["id"]).to eq(id.to_s)
   end
 
-  xit "can single find merchant by name " do
+  it "can single find invoice by status " do
     merchant = create(:merchant)
+    customer = create(:customer)
+    invoice = create(:invoice, merchant: merchant, customer: customer)
 
-    get "/api/v1/merchants/find?name=#{merchant.name}"
+    get "/api/v1/invoices/find?status=#{invoice.status}"
 
-    merchant_json = JSON.parse(response.body)
+    invoice_json = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(merchant_json["data"]["attributes"]["name"]).to eq(merchant.name)
-    expect(merchant_json["data"]["id"]).to eq(merchant.id.to_s)
-    expect(merchant_json["data"]["type"]).to eq("merchant")
+    expect(invoice_json["data"]["attributes"]["status"]).to eq(invoice.status)
+    expect(invoice_json["data"]["id"]).to eq(invoice.id.to_s)
+    expect(invoice_json["data"]["type"]).to eq("invoice")
   end
 
   it "can get one invoice by its id" do

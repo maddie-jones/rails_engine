@@ -1,36 +1,56 @@
 require 'rails_helper'
 
 describe "Merchant API" do
-  xit "sends a list of merchants" do
-    create_list(:merchant, 3)
+  it "sends a list of invoices_items" do
+    merchant_1 = create(:merchant)
+    customer = create(:customer)
+    item_1 = create(:item, merchant: merchant_1)
+    item_2 = create(:item, merchant: merchant_1)
+    invoice_1 = create(:invoice, merchant: merchant_1, customer: customer)
+    invoice_item_1 = create(:invoice_item, item: item_1, invoice: invoice_1 )
+    invoice_item_2 = create(:invoice_item, item: item_2, invoice: invoice_1 )
+    invoice_item_3 = create(:invoice_item, item: item_2, invoice: invoice_1 )
 
-    get '/api/v1/merchants'
+
+    get '/api/v1/invoice_items'
 
     expect(response).to be_successful
-    merchants = JSON.parse(response.body)
+    invoice_items = JSON.parse(response.body)
 
   end
-  xit "can get one merchant by its id" do
-    id = create(:merchant).id
+  it "can get one invoice_items by its id" do
+    merchant_1 = create(:merchant)
+    customer = create(:customer)
+    item_1 = create(:item, merchant: merchant_1)
+    item_2 = create(:item, merchant: merchant_1)
+    invoice_1 = create(:invoice, merchant: merchant_1, customer: customer)
+    invoice_item_1 = create(:invoice_item, item: item_1, invoice: invoice_1 )
 
-    get "/api/v1/merchants/#{id}"
+    id = invoice_item_1.id
 
-    merchant = JSON.parse(response.body)
+    get "/api/v1/invoice_items/#{id}"
+
+    invoice_item = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(merchant["data"]["id"]).to eq(id.to_s)
+    expect(invoice_item["data"]["id"]).to eq(id.to_s)
   end
 
-  xit "can single find merchant by name " do
-    merchant = create(:merchant)
+  it "can single find invoice_item by quantity " do
+    merchant_1 = create(:merchant)
+    customer = create(:customer)
+    item_1 = create(:item, merchant: merchant_1)
+    item_2 = create(:item, merchant: merchant_1)
+    invoice_1 = create(:invoice, merchant: merchant_1, customer: customer)
+    invoice_item_1 = create(:invoice_item, item: item_1, invoice: invoice_1, quantity: 2 )
 
-    get "/api/v1/merchants/find?name=#{merchant.name}"
+    get "/api/v1/invoice_items/find?name=#{invoice_item_1.quantity}"
 
-    merchant_json = JSON.parse(response.body)
+    invoice_item_json = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(merchant_json["data"]["attributes"]["name"]).to eq(merchant.name)
-    expect(merchant_json["data"]["id"]).to eq(merchant.id.to_s)
-    expect(merchant_json["data"]["type"]).to eq("merchant")
+    expect(invoice_item_json["data"]["attributes"]["quantity"]).to eq(invoice_item_1.quantity)
+    expect(invoice_item_json["data"]["id"]).to eq(invoice_item_1.id.to_s)
+    expect(invoice_item_json["data"]["type"]).to eq("invoice_item")
   end
 end
